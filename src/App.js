@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import PaymentForm from './components/PaymentForm';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      loaded: false
+    }
+  }
+
+  componentWillMount(){
+    const that = this;
+    let sqPaymentScript = document.createElement('script');
+    sqPaymentScript.src = "https://js.squareup.com/v2/paymentform";
+    sqPaymentScript.type = "text/javascript"
+    sqPaymentScript.async = false;
+    sqPaymentScript.onload = ()=>{that.setState({
+      loaded: true
+    })};
+    document.getElementsByTagName("head")[0].appendChild(sqPaymentScript);
+  }
+
+  render() {
+    return (
+      this.state.loaded &&
+        <PaymentForm
+          paymentForm={ window.SqPaymentForm }
+        />
+    );
+  }
 }
 
 export default App;
